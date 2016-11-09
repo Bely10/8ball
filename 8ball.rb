@@ -1,24 +1,15 @@
+# coding: UTF-8
+require 'telegram/bot'
 
-answers = [
-  # Варианты приветствия
-  "Привет, дорогой друг. Отвечаю на твой вопрос...",
-  "Кто вопрошает, тот получит ответ:",
-  "Здравствуй, смертный. Сегодня для тебя такой ответ:"
-]
+TOKEN = '289235041:AAH6QcaNCTm01j6P1IZ_47HNLN6dRCdcYY0'
 
-puts answers.sample
-# Пустая строка
-puts " "
-# Задержка вывода 3 сек
-sleep(3)
-
-answers = [
+ANSWERS = [
   # Положительные
   "Бесспорно",
   "Предрешено",
   "Никаких сомнений",
   "Определённо да",
-  "Можешь быть уверен в этом",
+  "Точно да",
 
   # Нерешительно положительные
   "Мне кажется — «да»",
@@ -42,5 +33,19 @@ answers = [
   "Весьма сомнительно"
 ]
 
-# Выводим случайный элемент массива
-puts answers.sample
+Telegram::Bot::Client.run(TOKEN) do |bot|
+  bot.listen do |message|
+    case message.text
+      when '/start', '/start start'
+        bot.api.send_message(
+                   chat_id: message.chat.id,
+                   text: "Здравствуй, #{message.from.first_name}"
+        )
+      else
+        bot.api.send_message(
+                   chat_id: message.chat.id,
+                   text: ANSWERS.sample
+        )
+    end
+  end
+end
